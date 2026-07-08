@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FIX: Baris di bawah ini berfungsi agar gambar dari Tenor tidak diblokir browser -->
+    <meta name="referrer" content="no-referrer">
+    
     <title>Maafin Aku Ya? 🥺</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -15,6 +18,7 @@
             font-family: 'Nunito', sans-serif;
         }
 
+        /* Container Utama dengan Background Bergerak */
         body {
             min-height: 100vh;
             display: flex;
@@ -33,6 +37,7 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* EMOJI MELAYANG (SEDIH/MEMOHON) */
         .emoji-bg {
             position: absolute;
             font-size: 2.5rem;
@@ -56,6 +61,7 @@
             }
         }
 
+        /* Desain Glassmorphism (Kaca) */
         .glass-card {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(15px);
@@ -72,11 +78,16 @@
             animation: floatUpIn 1s ease-out forwards;
         }
 
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* CONTAINER GIF YANG RESPONSif */
         .gif-container {
             margin-bottom: 20px;
             overflow: hidden;
             border-radius: 15px;
-            min-height: 200px;
+            min-height: 200px; /* Mencegah layout lompat saat loading gambar */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -116,6 +127,7 @@
             position: relative;
         }
 
+        /* Desain Tombol 3D */
         button {
             font-size: 1.1rem;
             font-weight: 800;
@@ -147,6 +159,7 @@
             z-index: 100;
         }
 
+        /* TAMPILAN TOMBOL LANJUTAN */
         #btn-next {
             background-color: #4cd137;
             color: #fff;
@@ -167,10 +180,12 @@
             100% { transform: scale(1); }
         }
 
+        /* Pesan Sukses */
         .hidden {
             display: none !important;
         }
 
+        /* Animasi Masuk */
         @keyframes floatUpIn {
             0% { opacity: 0; transform: translateY(50px) scale(0.9); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -183,7 +198,8 @@
 
     <div class="glass-card" id="main-card">
         <div class="gif-container">
-            <img id="cat-gif" src="https://i.imgur.com/KzHhO0Y.gif" alt="Cute cat crying">
+            <!-- HALAMAN 1: Kucing Minta Maaf Nangis Memelas -->
+            <img id="cat-gif" src="https://media.tenor.com/Z8izCgA4OygAAAAi/peach-goma-apologize.gif" alt="Cute cat crying">
         </div>
         
         <h1 id="title">Maafin Aku Ya? 🥺</h1>
@@ -194,10 +210,12 @@
             <button id="btn-no" onmouseover="kabur()" onclick="kabur()">Gak!</button>
         </div>
 
+        <!-- Tombol Lanjut Cerita -->
         <button id="btn-next" class="hidden" onclick="lanjutCerita()">Lanjut Mau Cerita</button>
     </div>
 
     <script>
+        // --- BUAT EMOJI MELAYANG ---
         function createFloatingEmoji() {
             const container = document.getElementById('emoji-container');
             const emojis = ['🥺', '🙏', '😭', '💔'];
@@ -217,7 +235,9 @@
 
         window.addEventListener('load', createFloatingEmoji);
 
+        // --- LOGIKA TOMBOL KABUR ---
         const btnNo = document.getElementById('btn-no');
+        
         btnNo.addEventListener('touchstart', (e) => {
             e.preventDefault();
             kabur();
@@ -240,16 +260,22 @@
             btnNo.style.transform = `rotate(${randomRot}deg)`;
         }
 
+        // --- LOGIKA SAAT DIMA'AFKAN (HALAMAN 2) ---
         function dimaafin() {
-            // HALAMAN 2: Link CDN Kucing Pelukan Bahagia
-            document.getElementById('cat-gif').src = "https://i.imgur.com/vHqgZfA.gif";
+            // HALAMAN 2: Otomatis ganti ke GIF Kucing Pelukan Senang Saling Sayang
+            document.getElementById('cat-gif').src = "https://media.tenor.com/6Xy1Dq8G8B8AAAAi/peach-and-goma-peach-goma.gif";
             
+            // Ganti Teks Sambutan Sukses
             document.getElementById('title').innerText = "YAYYY! MAKASIHH! 🥰";
             document.getElementById('desc').innerText = "Hehehe sayang kamu banyak-banyak! Gak bakal diulangin lagi deh janjii 🤞❤️";
             
+            // Hilangkan Tombol Pilihan (Iya/Gak)
             document.querySelector('.btn-container').classList.add('hidden');
+            
+            // Tampilkan Tombol Lanjut Cerita
             document.getElementById('btn-next').classList.remove('hidden');
             
+            // Ubah emoji background jadi lope-lope
             const floatingEmojis = document.querySelectorAll('.emoji-bg');
             floatingEmojis.forEach(el => {
                 el.innerText = '❤️';
@@ -258,6 +284,7 @@
                 el.style.animationDuration = '4s';
             });
 
+            // Efek Ledakan Confetti
             var duration = 3 * 1000;
             var end = Date.now() + duration;
 
@@ -283,13 +310,15 @@
             }());
         }
 
+        // --- LOGIKA TOMBOL LANJUTAN DITEKAN (HALAMAN 3) ---
         function lanjutCerita() {
-            // HALAMAN 3: Link CDN Kucing Manja Menyimak Cerita
-            document.getElementById('cat-gif').src = "https://i.imgur.com/vA6Xw0f.gif";
+            // HALAMAN 3: Otomatis ganti ke GIF Kucing Manja Ndusel-Ndusel dengerin cerita
+            document.getElementById('cat-gif').src = "https://media.tenor.com/XDHXw6b9v9gAAAAi/peach-goma-cat.gif";
 
             document.getElementById('title').innerText = "Dengerin Dulu.. 🥺";
             document.getElementById('desc').innerText = "Jadi tuh sebenernya kemarin aku gini blablabla... Intinya aku gak ada maksud bikin kamu kesel kok. Jangan ngambek lagi ya manis? ❤️";
             
+            // Hilangkan tombol setelah ditekan agar bersih
             document.getElementById('btn-next').classList.add('hidden');
         }
     </script>
