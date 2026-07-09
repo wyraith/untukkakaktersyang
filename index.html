@@ -4,17 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    
+
     <title>Adalah Pokonya</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
+
     <style>
+        :root {
+            --peach: #ffd9c7;
+            --pink: #ffb5c9;
+            --lilac: #d9b8ff;
+            --sky: #b8e3ff;
+            --cream: #fff6ee;
+            --plum: #6b4a63;
+            --accent: #ff7d97;
+            --accent-dark: #e85f7c;
+            --mint: #b7f0d6;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        html, body {
+            min-height: 100vh;
         }
 
         body {
@@ -22,179 +38,443 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a18cd1, #fbc2eb);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            overflow-x: hidden; /* Mencegah scroll horizontal jika tombol kabur ke pinggir */
+            background: linear-gradient(160deg, var(--peach) 0%, var(--pink) 35%, var(--lilac) 70%, var(--sky) 100%);
+            background-size: 300% 300%;
+            animation: gradientBG 18s ease infinite;
+            overflow-x: hidden;
             position: relative;
-            padding: 20px; /* Jarak aman agar kartu tidak nempel ke pinggir layar HP */
+            padding: 20px;
         }
 
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% { background-position: 0% 30%; }
+            50% { background-position: 100% 70%; }
+            100% { background-position: 0% 30%; }
+        }
+
+        /* soft glow blobs drifting behind everything for a cozy dreamy feel */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.55;
+            z-index: 0;
+            animation: blobDrift 14s ease-in-out infinite;
+        }
+        .blob:nth-child(1) { width: 260px; height: 260px; background: var(--mint); top: -60px; left: -60px; animation-duration: 16s; }
+        .blob:nth-child(2) { width: 220px; height: 220px; background: var(--sky); bottom: -50px; right: -40px; animation-duration: 20s; animation-delay: -4s; }
+        .blob:nth-child(3) { width: 180px; height: 180px; background: var(--lilac); bottom: 10%; left: -50px; animation-duration: 12s; animation-delay: -2s; }
+        .blob:nth-child(4) { width: 150px; height: 150px; background: var(--peach); top: 12%; right: -30px; animation-duration: 18s; animation-delay: -6s; }
+        .blob:nth-child(5) { width: 130px; height: 130px; background: #fff2c4; top: 60%; right: 6%; animation-duration: 15s; animation-delay: -3s; opacity: 0.4; }
+
+        /* faint repeating heart pattern to fill empty background space */
+        .pattern-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.16;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.9) 2px, transparent 2.5px);
+            background-size: 42px 42px;
+        }
+
+        @keyframes blobDrift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(25px, -20px) scale(1.08); }
         }
 
         .emoji-bg {
             position: absolute;
-            font-size: 2.5rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 2.2rem;
             user-select: none;
             pointer-events: none;
-            animation: floatUp 10s infinite linear;
+            animation: floatUp 11s infinite linear;
             z-index: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
         }
 
         @keyframes floatUp {
-            0% { 
-                transform: translateY(110vh) translateX(-50px) rotate(0deg); 
+            0% {
+                transform: translateY(110vh) translateX(-30px) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% { 
-                transform: translateY(-20vh) translateX(50px) rotate(360deg); 
+            10% { opacity: 0.85; }
+            90% { opacity: 0.85; }
+            100% {
+                transform: translateY(-15vh) translateX(30px) rotate(20deg) scale(1.1);
                 opacity: 0;
             }
+        }
+
+        /* twinkling sparkles scattered around */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+            50% { opacity: 0.9; transform: scale(1) rotate(90deg); }
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 30px;
-            padding: 30px 20px; /* Sedikit diperkecil untuk HP */
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 34px;
+            padding: 34px 24px;
             text-align: center;
             width: 100%;
             max-width: 420px;
-            max-height: 90vh; /* Agar tidak melebihi tinggi layar ponsel pintar */
-            overflow-y: auto; /* Jika teks kepanjangan di HP pendek, kartu bisa di-scroll internal */
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(150, 90, 130, 0.25), inset 0 1px 0 rgba(255,255,255,0.6);
             z-index: 10;
+            position: relative;
             transition: transform 0.3s ease;
-            animation: floatUpIn 1s ease-out forwards;
+            animation: floatUpIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        /* Menyembunyikan scrollbar bawaan untuk tampilan estetik */
-        .glass-card::-webkit-scrollbar {
-            width: 4px;
-        }
+        .glass-card::-webkit-scrollbar { width: 4px; }
         .glass-card::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 125, 151, 0.5);
             border-radius: 10px;
         }
 
         .glass-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+        }
+
+        .glass-card.closing-glow {
+            animation: floatUpIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards, glowPulse 1.8s ease-in-out 0.9s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 25px 60px rgba(150, 90, 130, 0.25), 0 0 0 rgba(255, 125, 151, 0); }
+            50% { box-shadow: 0 25px 60px rgba(150, 90, 130, 0.25), 0 0 40px rgba(255, 125, 151, 0.45); }
+        }
+
+        /* wrapper for everything that swaps between story pages */
+        #card-content {
+            transition: opacity 0.32s ease, transform 0.32s ease;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        #card-content.swap-out {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.97);
+        }
+
+        /* staggered entrance for the opening page */
+        .enter-item {
+            opacity: 0;
+            animation: itemPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .enter-1 { animation-delay: 0.15s; }
+        .enter-2 { animation-delay: 0.3s; }
+        .enter-3 { animation-delay: 0.45s; }
+        .enter-4 { animation-delay: 0.6s; }
+        .enter-5 { animation-delay: 0.75s; }
+
+        @keyframes itemPopIn {
+            0% { opacity: 0; transform: translateY(16px) scale(0.9); }
+            70% { opacity: 1; transform: translateY(-2px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .corner-sticker {
+            opacity: 0;
+            animation: stickerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .corner-sticker.tl { animation-delay: 0.5s; }
+        .corner-sticker.tr { animation-delay: 0.65s; }
+        .corner-sticker.bl { animation-delay: 0.8s; }
+        .corner-sticker.br { animation-delay: 0.95s; }
+
+        @keyframes stickerPop {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            60% { opacity: 1; }
+            100% { opacity: 0.85; transform: scale(1) rotate(var(--rot, 0deg)); }
+        }
+
+        /* little pop/wiggle whenever the character image changes */
+        .gif-container.pop {
+            animation: gifPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes gifPop {
+            0% { transform: scale(0.7) rotate(-6deg); }
+            55% { transform: scale(1.08) rotate(4deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 125, 151, 0.15);
+            color: var(--accent-dark);
+            font-family: 'Baloo 2', 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 125, 151, 0.3);
+        }
+
+        /* progress dots showing which page of the story we're on */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-bottom: 16px;
+        }
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(107, 74, 99, 0.22);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .dot.active {
+            width: 20px;
+            border-radius: 5px;
+            background: var(--accent-dark);
+        }
+        .dot.done {
+            background: rgba(232, 95, 124, 0.5);
+        }
+
+        /* mute/unmute music toggle, pinned to the card corner */
+        .mute-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 4px 10px rgba(150, 90, 130, 0.18);
+            transition: transform 0.2s ease;
+        }
+        .mute-btn:active { transform: scale(0.88); }
+
+        /* small sender/date stamp tucked in the card corner */
+        .stamp {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: rgba(107, 74, 99, 0.45);
+            letter-spacing: 0.3px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        /* checklist used on the "janji" page */
+        .promise-list {
+            list-style: none;
+            text-align: left;
+            margin: 4px 0 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .promise-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #6b4a63;
+            opacity: 0;
+            transform: translateX(-14px);
+            animation: promiseIn 0.5s ease forwards;
+        }
+        .promise-list li:nth-child(1) { animation-delay: 0.1s; }
+        .promise-list li:nth-child(2) { animation-delay: 0.28s; }
+        .promise-list li:nth-child(3) { animation-delay: 0.46s; }
+        .promise-list li:nth-child(4) { animation-delay: 0.64s; }
+        .promise-list li span.check {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        @keyframes promiseIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* blinking cursor for the typewriter effect */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s step-end infinite;
+            color: var(--accent-dark);
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .corner-sticker {
+            position: absolute;
+            font-size: 1.6rem;
+            opacity: 0.85;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.1));
+            pointer-events: none;
+        }
+        .corner-sticker.tl { top: -14px; left: -10px; --rot: -18deg; }
+        .corner-sticker.tr { top: -12px; right: -8px; --rot: 15deg; }
+        .corner-sticker.bl { bottom: -10px; left: -6px; --rot: 10deg; }
+        .corner-sticker.br { bottom: -12px; right: -10px; --rot: -12deg; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 16px;
+            color: rgba(107, 74, 99, 0.35);
+            font-size: 0.85rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,125,151,0.4), transparent);
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.78rem !important;
+            font-weight: 600;
+            color: rgba(122, 90, 113, 0.7);
+            letter-spacing: 0.3px;
         }
 
         .gif-container {
-            margin-bottom: 20px;
+            margin: 0 auto 18px;
             overflow: hidden;
-            border-radius: 15px;
+            border-radius: 20px;
             min-height: 150px;
+            width: fit-content;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: rgba(255,255,255,0.4);
+            padding: 8px;
+            border: 3px solid rgba(255,255,255,0.8);
+            box-shadow: 0 10px 25px rgba(150, 90, 130, 0.18);
         }
 
         .gif-container img {
-            width: 100%; 
-            height: auto; 
-            max-width: 180px; /* Dioptimalkan ukurannya agar seimbang di HP */
-            border-radius: 15px;
+            width: 100%;
+            height: auto;
+            max-width: 170px;
+            border-radius: 14px;
             pointer-events: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             display: block;
         }
 
         h1 {
-            color: #fff;
-            font-size: 1.8rem; /* Sedikit diperkecil agar tidak pecah jadi 3 baris di HP */
-            font-weight: 900;
+            color: var(--plum);
+            font-family: 'Baloo 2', 'Quicksand', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 800;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         p {
-            color: #fff;
+            color: #7a5a71;
             font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            margin-bottom: 22px;
         }
 
         .story-text {
-            font-size: 0.95rem !important; /* Ukuran teks cerita disesuaikan agar nyaman dibaca di HP */
-            line-height: 1.6;
+            font-size: 0.96rem !important;
+            line-height: 1.7;
             text-align: justify;
             margin-bottom: 20px;
-            padding: 0 5px;
+            padding: 0 4px;
+            color: #6b4a63;
+            font-weight: 600;
         }
 
         .closing-text {
-            font-size: 1.3rem !important;
-            font-weight: 900;
-            color: #fff;
+            font-size: 1.35rem !important;
+            font-weight: 800;
+            font-family: 'Baloo 2', 'Quicksand', sans-serif;
+            color: var(--accent-dark);
             display: block;
-            margin-top: 25px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-top: 22px;
         }
 
         .btn-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 14px;
             position: relative;
-            min-height: 50px; /* Menjaga space tombol tetap aman */
+            min-height: 52px;
         }
 
         button {
-            font-size: 1rem;
-            font-weight: 800;
-            padding: 12px 25px;
+            font-size: 0.98rem;
+            font-family: 'Baloo 2', 'Quicksand', sans-serif;
+            font-weight: 700;
+            padding: 13px 26px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.3px;
         }
 
         #btn-yes {
-            background-color: #fff;
-            color: #ff4757;
-            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3), 0 3px 0 #e2e2e2;
+            background: linear-gradient(135deg, #ffffff, #ffe9ef);
+            color: var(--accent-dark);
+            box-shadow: 0 6px 14px rgba(255, 125, 151, 0.25), 0 3px 0 #f2c9d3;
         }
-
         #btn-yes:active {
             transform: translateY(3px);
-            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 0 #e2e2e2;
+            box-shadow: 0 2px 6px rgba(255, 125, 151, 0.25), 0 0 0 #f2c9d3;
         }
 
         #btn-no {
-            background-color: #ff4757;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
             color: #fff;
-            box-shadow: 0 6px 12px rgba(255, 71, 87, 0.4), 0 3px 0 #d63031;
-            position: relative; 
+            box-shadow: 0 6px 14px rgba(232, 95, 124, 0.4), 0 3px 0 #c94a68;
+            position: relative;
             z-index: 100;
         }
 
         #btn-next {
-            background-color: #4cd137;
+            background: linear-gradient(135deg, #7fe0b0, #4cd137);
             color: #fff;
-            box-shadow: 0 6px 12px rgba(76, 209, 55, 0.4), 0 3px 0 #44bd32;
+            box-shadow: 0 6px 14px rgba(76, 209, 55, 0.35), 0 3px 0 #3aa62a;
             display: inline-block;
-            margin-top: 10px;
-            animation: pulse 1.5s infinite;
+            margin-top: 8px;
+            animation: pulse 1.6s infinite;
         }
-
         #btn-next:active {
             transform: translateY(3px);
-            box-shadow: 0 2px 5px rgba(76, 209, 55, 0.3), 0 0 0 #44bd32;
+            box-shadow: 0 2px 6px rgba(76, 209, 55, 0.3), 0 0 0 #3aa62a;
         }
 
         @keyframes pulse {
@@ -203,20 +483,17 @@
             100% { transform: scale(1); }
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         @keyframes floatUpIn {
-            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            0% { opacity: 0; transform: translateY(35px) scale(0.92); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Responsivitas Layar Sangat Kecil (Contoh: Jaringan HP Jadul / Lipat) */
         @media (max-width: 360px) {
-            h1 { font-size: 1.5rem; }
-            button { font-size: 0.9rem; padding: 10px 20px; }
-            .gif-container img { max-width: 150px; }
+            h1 { font-size: 1.4rem; }
+            button { font-size: 0.88rem; padding: 11px 20px; }
+            .gif-container img { max-width: 140px; }
         }
     </style>
 </head>
@@ -226,22 +503,53 @@
         <source src="b.mp3" type="audio/mpeg">
     </audio>
 
+    <div class="pattern-layer"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+
     <div id="emoji-container"></div>
+    <div id="sparkle-container"></div>
 
     <div class="glass-card" id="main-card">
-        <div class="gif-container">
-            <img id="cat-gif" src="pp.png" alt="Cute cat crying">
-        </div>
-        
-        <h1 id="title">Maafin Aku Ya? 🥺</h1>
-        <p id="desc">maaff ya kakak aku jahat banget ke kakak 👉👈</p>
-        
-        <div class="btn-container">
-            <button id="btn-yes" onclick="dimaafin()">Iyaaa</button>
-            <button id="btn-no" onmouseover="kabur()" onclick="kabur()">Gak!</button>
+        <span class="corner-sticker tl">🎀</span>
+        <span class="corner-sticker tr">✨</span>
+        <span class="corner-sticker bl">💌</span>
+        <span class="corner-sticker br">🌸</span>
+
+        <button class="mute-btn enter-item enter-1" id="mute-btn" onclick="toggleMute()" aria-label="Mute musik">🔊</button>
+
+        <span class="eyebrow enter-item enter-1" id="eyebrow">💌 buat kakak</span>
+
+        <div class="progress-dots enter-item enter-1" id="progress-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
         </div>
 
-        <button id="btn-next" class="hidden" onclick="lanjutCerita()">Lanjut Mau Cerita</button>
+        <div id="card-content">
+            <div class="gif-container enter-item enter-2">
+                <img id="cat-gif" src="pp.png" alt="Cute cat crying">
+            </div>
+
+            <h1 id="title" class="enter-item enter-3">Maafin Aku Ya? 🥺</h1>
+            <p id="desc" class="enter-item enter-3">maaff ya kakak aku jahat banget ke kakak 👉👈</p>
+
+            <div class="btn-container enter-item enter-4">
+                <button id="btn-yes" onclick="dimaafin()">Iyaaa</button>
+                <button id="btn-no" onmouseover="kabur()" onclick="kabur()">Gak!</button>
+            </div>
+
+            <button id="btn-next" class="hidden" onclick="lanjutCerita()">Lanjut Mau Cerita</button>
+
+            <div class="divider enter-item enter-5" id="divider">🤍</div>
+            <p class="footer-note enter-item enter-5" id="footer-note">dibuat pelan-pelan, khusus buat kakak</p>
+            <p class="stamp enter-item enter-5" id="stamp"></p>
+        </div>
     </div>
 
     <script>
@@ -259,25 +567,113 @@
 
         function createFloatingEmoji() {
             const container = document.getElementById('emoji-container');
-            const emojis = ['🥺', '🙏', '😭', '💔'];
-            const emojiCount = 10; // Dikurangi sedikit agar tidak terlalu berat di HP beban ram kecil
+            const emojis = ['🥺', '🙏', '😭', '💗', '✨'];
+            const emojiCount = 10;
 
             for (let i = 0; i < emojiCount; i++) {
                 const emoji = document.createElement('div');
                 emoji.className = 'emoji-bg';
                 emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.style.left = Math.random() * 90 + 'vw'; /* Menghindari overflow kanan luar layar */
-                emoji.style.fontSize = (Math.random() * 1 + 1.8) + 'rem';
+                emoji.style.left = Math.random() * 90 + 'vw';
+                emoji.style.fontSize = (Math.random() * 1 + 1.6) + 'rem';
                 emoji.style.animationDuration = (Math.random() * 5 + 8) + 's';
                 emoji.style.animationDelay = (Math.random() * 8) + 's';
                 container.appendChild(emoji);
             }
         }
 
-        window.addEventListener('load', createFloatingEmoji);
+        function createSparkles() {
+            const container = document.getElementById('sparkle-container');
+            const sparkleCount = 14;
+            const colors = ['#ffffff', '#ffe1ea', '#e6d6ff', '#d3f3e6'];
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 8 + 6;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = size + 'px';
+                sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                sparkle.style.animationDelay = (Math.random() * 4) + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            createFloatingEmoji();
+            createSparkles();
+            initStamp();
+        });
+
+        // --- Mute / unmute music ---
+        let isMuted = false;
+        function toggleMute() {
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            document.getElementById('mute-btn').innerText = isMuted ? '🔇' : '🔊';
+        }
+
+        // --- Small date/sender stamp in the corner ---
+        function initStamp() {
+            const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('stamp').innerText = `dari aku, dengan sayang · ${today}`;
+        }
+
+        // --- Progress dots: step is 1-5 ---
+        function updateProgress(step) {
+            const dots = document.querySelectorAll('#progress-dots .dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active', 'done');
+                if (i + 1 < step) dot.classList.add('done');
+                else if (i + 1 === step) dot.classList.add('active');
+            });
+        }
+
+        // --- Typewriter effect: types plain text into an element char by char ---
+        let typewriterInterval = null;
+        function typeWriter(el, text, speed = 22) {
+            clearInterval(typewriterInterval);
+            el.innerText = '';
+            el.classList.add('typing-cursor');
+            let i = 0;
+            typewriterInterval = setInterval(() => {
+                el.innerText = text.slice(0, i + 1);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(typewriterInterval);
+                    el.classList.remove('typing-cursor');
+                }
+            }, speed);
+        }
+
+        // Fades the swappable content out, runs the update, then fades it back in.
+        // Also gives the character image a little pop/wiggle each time it changes.
+        function transitionContent(updateFn, delay = 320) {
+            // stop any in-progress typewriter effect so it can't overwrite the next page's content
+            clearInterval(typewriterInterval);
+            document.getElementById('desc').classList.remove('typing-cursor');
+
+            const content = document.getElementById('card-content');
+            content.classList.add('swap-out');
+            setTimeout(() => {
+                updateFn();
+                popGif();
+                content.classList.remove('swap-out');
+            }, delay);
+        }
+
+        function popGif() {
+            const gifBox = document.querySelector('.gif-container');
+            gifBox.classList.remove('pop');
+            void gifBox.offsetWidth; // restart animation
+            gifBox.classList.add('pop');
+        }
 
         const btnNo = document.getElementById('btn-no');
-        
+
         btnNo.addEventListener('touchstart', (e) => {
             e.preventDefault();
             kabur();
@@ -290,32 +686,36 @@
             const screenHeight = window.innerHeight;
             const btnWidth = btnNo.offsetWidth;
             const btnHeight = btnNo.offsetHeight;
-            
-            // Memberikan padding batas aman sebesar 20px dari pinggiran layar asli HP agar tombol tidak hilang total
+
             const randomX = Math.floor(Math.random() * (screenWidth - btnWidth - 40)) + 20;
             const randomY = Math.floor(Math.random() * (screenHeight - btnHeight - 40)) + 20;
-            
+
             btnNo.style.left = randomX + 'px';
             btnNo.style.top = randomY + 'px';
-            
-            const randomRot = Math.floor(Math.random() * 40) - 20; 
+
+            const randomRot = Math.floor(Math.random() * 40) - 20;
             btnNo.style.transform = `rotate(${randomRot}deg)`;
         }
 
         // --- HALAMAN 2 (Setelah Klik Iyaaa) ---
         function dimaafin() {
             bgMusic.play();
-            document.getElementById('cat-gif').src = "pp2.png";
-            document.getElementById('title').innerText = "YAYYY! MAKASIHH! 🥰";
-            document.getElementById('desc').innerText = "hehehe kakak baik dehh 🤞❤️";
-            
-            document.querySelector('.btn-container').classList.add('hidden');
-            document.getElementById('btn-next').classList.remove('hidden');
-            
+            updateProgress(2);
+
+            transitionContent(() => {
+                document.getElementById('cat-gif').src = "pp2.png";
+                document.getElementById('title').innerText = "YAYYY! MAKASIHH! 🥰";
+                document.getElementById('desc').innerText = "hehehe kakak baik dehh 🤞❤️";
+
+                document.querySelector('.btn-container').classList.add('hidden');
+                document.getElementById('btn-next').classList.remove('hidden');
+                document.getElementById('eyebrow').innerText = '🎉 dimaafin!';
+                document.getElementById('footer-note').innerText = 'yeay makasih udah baik ❤️';
+            });
+
             const floatingEmojis = document.querySelectorAll('.emoji-bg');
             floatingEmojis.forEach(el => {
                 el.innerText = '❤️';
-                el.style.color = '#ff4757';
                 el.style.opacity = '0.9';
                 el.style.animationDuration = '4s';
             });
@@ -329,14 +729,14 @@
                     angle: 60,
                     spread: 45,
                     origin: { x: 0 },
-                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                    colors: ['#ffb5c9', '#ffd9c7', '#ffffff', '#ff7d97']
                 });
                 confetti({
                     particleCount: 3,
                     angle: 120,
                     spread: 45,
                     origin: { x: 1 },
-                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                    colors: ['#ffb5c9', '#ffd9c7', '#ffffff', '#ff7d97']
                 });
 
                 if (Date.now() < end) {
@@ -347,29 +747,82 @@
 
         // --- HALAMAN 3 (Bagian Cerita) ---
         function lanjutCerita() {
-            document.getElementById('cat-gif').src = "pp3.png";
-            document.getElementById('title').innerText = "Aku Mau Cerita Nihh 🥰";
-            
-            const descEl = document.getElementById('desc');
-            descEl.classList.add('story-text');
-            
-            descEl.innerHTML = "kak, jujur aku nyaman sama kakak. aku suka dan sayang pake bgt (walaupun suka bikin nangis kk hh). aku tau ko kak emg sesayang dan sesuka itu sama aku, sampe2 masih bertahan hehe. aku cuma mau jalanin pelan-pelan aja, kenal lebih jauh, tanpa harus buru-buru kak. semoga kakak ngerti ya :). maaf ya kak aku selalu nyakitin perasaan kakak , kalo ga dimaapin gapapa si emg jahat akunya wkwk.";
-            
-            const btnNext = document.getElementById('btn-next');
-            btnNext.innerText = "Penutupan";
-            btnNext.setAttribute('onclick', 'penutupan()');
+            updateProgress(3);
+            transitionContent(() => {
+                document.getElementById('cat-gif').src = "pp3.png";
+                document.getElementById('title').innerText = "Aku Mau Cerita Nihh 🥰";
+
+                const descEl = document.getElementById('desc');
+                descEl.classList.add('story-text');
+                const storyText = "kak, jujur aku nyaman sama kakak. aku suka dan sayang pake bgt (walaupun suka bikin nangis kk hh). aku tau ko kak emg sesayang dan sesuka itu sama aku, sampe2 masih bertahan hehe. aku cuma mau jalanin pelan-pelan aja, kenal lebih jauh, tanpa harus buru-buru kak. semoga kakak ngerti ya :). maaf ya kak aku selalu nyakitin perasaan kakak , kalo ga dimaapin gapapa si emg jahat akunya wkwk.";
+                typeWriter(descEl, storyText, 14);
+                document.getElementById('eyebrow').innerText = '🥰 curhat dikit';
+                document.getElementById('footer-note').innerText = 'sabar ya kak, pelan-pelan aja';
+
+                const btnNext = document.getElementById('btn-next');
+                btnNext.innerText = "Lanjut";
+                btnNext.setAttribute('onclick', 'janji()');
+            });
         }
 
-        // --- HALAMAN 4 (Penutupan Akhir) ---
+        // --- HALAMAN 4 (Janji-janji Kecil) ---
+        function janji() {
+            updateProgress(4);
+            transitionContent(() => {
+                document.getElementById('cat-gif').src = "pp3.png";
+                document.getElementById('title').innerText = "Janji Kecil Dariku 🤍";
+
+                const descEl = document.getElementById('desc');
+                descEl.classList.remove('story-text', 'typing-cursor');
+                descEl.innerHTML = `
+                    <ul class="promise-list">
+                        <li><span class="check">✅</span> Lebih sabar dengerin kakak</li>
+                        <li><span class="check">✅</span> Jalanin pelan-pelan, gak buru-buru</li>
+                        <li><span class="check">✅</span> Jujur dan terbuka sama kakak</li>
+                        <li><span class="check">✅</span> Terus belajar jadi lebih baik</li>
+                    </ul>
+                `;
+                document.getElementById('eyebrow').innerText = '🤍 janji dariku';
+                document.getElementById('footer-note').innerText = 'ini janji kecil, tapi aku serius kak';
+
+                const btnNext = document.getElementById('btn-next');
+                btnNext.innerText = "Penutupan";
+                btnNext.setAttribute('onclick', 'penutupan()');
+            });
+        }
+
+        // --- HALAMAN 5 (Penutupan Akhir) ---
         function penutupan() {
-            document.getElementById('cat-gif').src = "pp2.png"; 
-            document.getElementById('title').innerText = "Daaa Kakak! 👋❤️";
-            
-            const descEl = document.getElementById('desc');
-            descEl.classList.remove('story-text');
-            descEl.innerHTML = "Makasih banyak ya udah mau luangin waktunya hehe. <br><span class='closing-text'>mwah ❤️</span>";
-            
-            document.getElementById('btn-next').classList.add('hidden');
+            updateProgress(5);
+            transitionContent(() => {
+                document.getElementById('cat-gif').src = "pp2.png";
+                document.getElementById('title').innerText = "Daaa Kakak! 👋❤️";
+
+                const descEl = document.getElementById('desc');
+                descEl.classList.remove('story-text');
+                descEl.innerHTML = "Makasih banyak ya udah mau luangin waktunya hehe. <br><span class='closing-text'>mwah ❤️</span>";
+                document.getElementById('eyebrow').innerText = '👋 sampai jumpa';
+                document.getElementById('footer-note').innerText = 'ditunggu ya kabarnya, kak 🤍';
+
+                document.getElementById('btn-next').classList.add('hidden');
+            });
+
+            // gentle glowing pulse around the card for the finale
+            document.getElementById('main-card').classList.add('closing-glow');
+
+            // one last, slightly bigger flurry of hearts drifting up
+            const container = document.getElementById('emoji-container');
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'emoji-bg';
+                heart.innerText = '💗';
+                heart.style.left = Math.random() * 90 + 'vw';
+                heart.style.fontSize = (Math.random() * 1.2 + 1.8) + 'rem';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                heart.style.animationDelay = (Math.random() * 1.5) + 's';
+                heart.style.opacity = '0.9';
+                container.appendChild(heart);
+            }
 
             var duration = 2.5 * 1000;
             var end = Date.now() + duration;
@@ -380,20 +833,31 @@
                     angle: 60,
                     spread: 50,
                     origin: { x: 0 },
-                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                    colors: ['#ffb5c9', '#ffd9c7', '#ffffff', '#ff7d97']
                 });
                 confetti({
                     particleCount: 4,
                     angle: 120,
                     spread: 50,
                     origin: { x: 1 },
-                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                    colors: ['#ffb5c9', '#ffd9c7', '#ffffff', '#ff7d97']
                 });
 
                 if (Date.now() < end) {
                     requestAnimationFrame(frame);
                 }
             }());
+
+            // one big celebratory burst right from the middle after the card settles
+            setTimeout(() => {
+                confetti({
+                    particleCount: 90,
+                    spread: 100,
+                    startVelocity: 35,
+                    origin: { x: 0.5, y: 0.4 },
+                    colors: ['#ffb5c9', '#ffd9c7', '#ffffff', '#ff7d97', '#d9b8ff']
+                });
+            }, 400);
         }
     </script>
 </body>
