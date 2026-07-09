@@ -115,6 +115,22 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
+        .story-text {
+            font-size: 1.05rem !important;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .closing-text {
+            font-size: 1.4rem !important;
+            font-weight: 900;
+            color: #fff;
+            display: block;
+            margin-top: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
         .btn-container {
             display: flex;
             justify-content: center;
@@ -210,12 +226,10 @@
     <script>
         const bgMusic = document.getElementById('bg-music');
 
-        // Trik Autoplay: Putar musik di interaksi pertama apa pun di layar (klik/sentuh)
         function playAudioOnInteraction() {
             bgMusic.play().catch(error => {
-                console.log("Autoplay dicegah browser, menunggu interaksi tombol.");
+                console.log("Autoplay dicegah browser.");
             });
-            // Hapus listener setelah musik berhasil berjalan agar tidak trigger berulang
             document.removeEventListener('click', playAudioOnInteraction);
             document.removeEventListener('touchstart', playAudioOnInteraction);
         }
@@ -249,9 +263,7 @@
         });
 
         function kabur() {
-            // Memastikan musik jalan jika tombol 'Gak!' diarahkan kursor
             bgMusic.play();
-            
             btnNo.style.position = 'fixed';
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
@@ -268,13 +280,10 @@
             btnNo.style.transform = `rotate(${randomRot}deg)`;
         }
 
-        // --- HALAMAN 2 ---
+        // --- HALAMAN 2 (Setelah Klik Iyaaa) ---
         function dimaafin() {
-            // Pastikan musik menyala saat tombol diklik
             bgMusic.play();
-            
             document.getElementById('cat-gif').src = "pp2.png";
-            
             document.getElementById('title').innerText = "YAYYY! MAKASIHH! 🥰";
             document.getElementById('desc').innerText = "hehehe kakak baik dehh 🤞❤️";
             
@@ -314,14 +323,59 @@
             }());
         }
 
-        // --- HALAMAN 3 ---
+        // --- HALAMAN 3 (Bagian Cerita) ---
         function lanjutCerita() {
             document.getElementById('cat-gif').src = "pp3.png";
-
             document.getElementById('title').innerText = "Aku Mau Cerita Nihh 🥰";
-            document.getElementById('desc').innerText = "kak, jujur aku nyaman sama kakak. aku suka dan sayang pake bgt (walaupun suka bikin nangis kk hh). aku tau ko kak emg sesayang dan sesuka itu sama aku, sampe2 masih bertahan hehe. kayanya aku belum mau pacaran dulu hehe, aku cuma mau jalanin pelan-pelan aja, kenal lebih jauh, tanpa harus buru-buru. semoga kakak ngerti ya :). maaf ya kak aku selalu nyakitin perasaan kakak , kalo ga dimaapin gapapa si emg jahat akunya wkwk. mwah ❤️";
             
+            const descEl = document.getElementById('desc');
+            descEl.classList.add('story-text');
+            
+            // Teks cerita tanpa penutup langsung agar tombol Penutupan di bawahnya pas
+            descEl.innerHTML = "kak, jujur aku nyaman sama kakak. aku suka dan sayang pake bgt (walaupun suka bikin nangis kk hh). aku tau ko kak emg sesayang dan sesuka itu sama aku, sampe2 masih bertahan hehe. aku cuma mau jalanin pelan-pelan aja, kenal lebih jauh, tanpa harus buru-buru kak. semoga kakak ngerti ya :). maaf ya kak aku selalu nyakitin perasaan kakak , kalo ga dimaapin gapapa si emg jahat akunya wkwk.";
+            
+            // Mengubah tombol menjadi tombol "Penutupan"
+            const btnNext = document.getElementById('btn-next');
+            btnNext.innerText = "Penutupan";
+            btnNext.setAttribute('onclick', 'penutupan()');
+        }
+
+        // --- HALAMAN 4 (Penutupan Akhir) ---
+        function penutupan() {
+            document.getElementById('cat-gif').src = "pp2.png"; // Bisa kamu ganti nama file gambarnya jika ada khusus penutupan
+            document.getElementById('title').innerText = "Daaa Kakak! 👋❤️";
+            
+            const descEl = document.getElementById('desc');
+            descEl.classList.remove('story-text');
+            descEl.innerHTML = "Makasih banyak ya udah mau luangin waktunya hehe. <br><span class='closing-text'>mwah ❤️</span>";
+            
+            // Sembunyikan tombol penutupan karena sudah di akhir halaman
             document.getElementById('btn-next').classList.add('hidden');
+
+            // Kasih efek selebrasi confetti penutup
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 6,
+                    angle: 60,
+                    spread: 60,
+                    origin: { x: 0 },
+                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                });
+                confetti({
+                    particleCount: 6,
+                    angle: 120,
+                    spread: 60,
+                    origin: { x: 1 },
+                    colors: ['#ff9a9e', '#fecfef', '#ffffff', '#ff4757']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
         }
     </script>
 </body>
